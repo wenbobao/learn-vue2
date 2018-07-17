@@ -6,12 +6,6 @@
 <script>
 export default {
   name: "App",
-  components: {},
-  data() {
-    return {};
-  },
-  methods: {},
-  mounted: {}
 };
 </script>
 <style scoped>

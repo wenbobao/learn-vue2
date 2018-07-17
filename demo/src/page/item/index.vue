@@ -14,7 +14,6 @@ export default {
   data() {
     return {};
   },
-  methods: {},
   created() {
     this.$store.commit("REMBER_TIME");
   }
