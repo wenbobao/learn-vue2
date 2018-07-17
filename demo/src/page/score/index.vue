@@ -1,17 +1,16 @@
 <template>
   <div>
-     <router-view></router-view>
+    100分
   </div>
 </template>
 <script>
 export default {
-  name: "App",
+  name: "score",
   components: {},
   data() {
     return {};
   },
   methods: {},
-  mounted: {}
 };
 </script>
 <style scoped>

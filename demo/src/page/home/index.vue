@@ -1,18 +1,24 @@
 <template>
   <div>
-     <router-view></router-view>
+    <item type="home"></item>
   </div>
 </template>
 <script>
+import item from "@/components/item";
+
 export default {
-  name: "App",
-  components: {},
+  name: "home",
+  components: {
+    item
+  },
   data() {
     return {};
   },
   methods: {},
-  mounted: {}
 };
 </script>
 <style scoped>
 </style>
+
+
+
