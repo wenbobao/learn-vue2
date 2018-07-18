@@ -1,15 +1,15 @@
 <template>
   <div>
-    <item type="home"></item>
+    <topic type="home"></topic>
   </div>
 </template>
 <script>
-import item from "@/components/item";
+import topic from "@/components/topic";
 
 export default {
   name: "home",
   components: {
-    item
+    topic
   },
   data() {
     return {};
