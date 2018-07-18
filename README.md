@@ -528,3 +528,195 @@ const router = new VueRouter({
 ## 路由懒加载
 
 当打包构建应用时，Javascript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
+
+# vuex
+
+## 安装
+
+```
+npm install vuex --save
+```
+
+## 使用
+
+```
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  }
+})
+
+new Vue({
+  router,
+  store
+}).$mount('#app')
+```
+
+通过 `store.state` 来获取对象，通过 `store.commit` 方法触发状态变更
+
+```
+console.log(store.state.count) // -> 1
+store.commit('increment') // 同步触发状态变更
+store.dispatch('increment') // 异步触发状态变更
+```
+
+## State
+
+如何在 Vue 组件中展示状态呢？
+
+```
+// 创建一个 Counter 组件
+const Counter = {
+  template: `<div>{{ count }}</div>`,
+  computed: {
+    count () {
+      return this.$store.state.count
+    }
+  }
+}
+```
+
+### 辅助函数 mapState
+
+当一个组件需要获取多个状态时候，将这些状态都声明为计算属性会有些重复和冗余。为了解决这个问题，我们可以使用 mapState 辅助函数帮助我们生成计算属性，让你少按几次键：
+
+```
+import { mapState } from 'vuex'
+
+// 方法一
+// 当映射的计算属性的名称与 state 的子节点名称相同时，我们也可以给 mapState 传一个字符串数组
+export default {
+  computed: mapState([
+    // 映射 this.count 为 store.state.count
+    'count'
+  ])
+}
+
+// 方法二
+
+export default {
+  computed: (
+    localComputed () { /* ... */ },
+    // 使用对象展开运算符将此对象混入到外部对象中
+    ...mapState({
+      // ...
+    })
+  )
+}
+```
+
+## Mutation
+
+更改 Vuex 的 store 中的状态的唯一方法是提交 mutation。
+
+Mutation 必须是同步函数
+
+```
+mutations: {
+  increment (state) {
+    // 变更状态
+    state.count++
+  }
+}
+store.commit('increment')
+```
+
+Payload
+
+```
+mutations: {
+  increment (state, n) {
+    // 变更状态
+    state.count += n
+  }
+}
+store.commit('increment', 10)
+
+mutations: {
+  increment (state, payload) {
+    state.count += payload.amount
+  }
+}
+
+store.commit('increment', {
+  amount: 10
+})
+```
+
+### 在组件中提交 Mutation
+
+在组件中使用 `this.$store.commit('xxx')` 提交 `mutation`，或者使用 `mapMutations` 辅助函数将组件中的 methods 映射为 `store.commit` 调用
+
+```
+import { mapMutations } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    ...mapMutations([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+
+      // `mapMutations` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`
+    ]),
+    ...mapMutations({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
+    })
+  }
+}s
+```
+
+## Action
+
+Action 类似于 mutation，不同在于：
+
+- Action 提交的是 mutation，而不是直接变更状态。
+- Action 可以包含任意异步操作。
+
+```
+actions: {
+  incrementAsync ({ commit, state }, payload) {
+    setTimeout(() => {
+      commit('increment')
+    }, 1000)
+  }
+}
+```
+
+### 在组件中分发 Action
+
+在组件中使用 this.$store.dispatch('xxx') 分发 action，或者使用 mapActions 辅助函数将组件的 methods 映射为 store.dispatch 调用（需要先在根节点注入 store:
+
+```
+import { mapActions } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    ...mapActions([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+
+      // `mapActions` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+    ]),
+    ...mapActions({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    })
+  }
+}
+```
