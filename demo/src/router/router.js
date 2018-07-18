@@ -1,14 +1,4 @@
 import App from '../App'
-// import home from '../page/home'
-
-// export default [{
-//   path: '/',
-//   component: App,
-//   children: [{
-//     path: '',
-//     component: home
-//   }]
-// }]
 
 export default [{
   path: '/',
